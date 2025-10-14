@@ -52,7 +52,7 @@ jobs:
           --build-arg TMKMS_GIT_REF_OLD=${{ env.GIT_SHA }} \
           --build-arg APP_BUILD_BRANCH=${{ github.ref }} \
           --build-arg APP_BUILD_DATETIME=${{ env.DATETIME }} \
-          --tag "ghcr.io/Crouton-Digital/tmkms:${{ github.ref_name }}" \
+          --tag "ghcr.io/crouton-digital/tmkms:${{ github.ref_name }}" \
           --push .
         env:
           DOCKER_CLI: docker
