@@ -1,0 +1,58 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+  push:
+    #    branches:
+    #      - "luminary"
+    tags: [ 'v*.*.*' ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build_container:
+    name: Build and Push image to GitHub Containers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      #id-token: write
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - name: Set correct environment
+        run: |
+          echo "Github REF TYPE: $GITHUB_REF_TYPE"
+          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          echo "Branch name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo "Branch name from github.ref_name: ${{  github.ref_name }}"
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Set Datetime as Environment Variable
+        run: echo "DATETIME=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+      - name: Set $GITHUB_ENV as Environment Variable
+        run: echo "GIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
+      - name: Build and Push Docker Images
+        run: |
+          docker buildx build \
+          --build-arg APP_BUILD_VERSION=${{ github.ref_name }} \
+          --build-arg TMKMS_GIT_REF_OLD=${{ env.GIT_SHA }} \
+          --build-arg APP_BUILD_BRANCH=${{ github.ref }} \
+          --build-arg APP_BUILD_DATETIME=${{ env.DATETIME }} \
+          --tag "ghcr.io/Crouton-Digital/tmkms:${{ github.ref_name }}" \
+          --push .
+        env:
+          DOCKER_CLI: docker
