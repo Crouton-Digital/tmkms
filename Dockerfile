@@ -29,7 +29,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       ca-certificates libssl3 libstdc++6 libgcc-s1 \
+      python3 \
+      python3-pip \
+      python3-venv \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade google-cloud-secret-manager --break-system-packages
+
 
 RUN useradd --create-home --shell /usr/sbin/nologin --uid 10001 tmkms
 
@@ -39,7 +45,8 @@ RUN mkdir -p /etc/tmkms /var/lib/tmkms /var/log/tmkms \
 COPY --from=builder /root/.cargo/bin/tmkms /bin/tmkms
 
 VOLUME ["/etc/tmkms", "/var/lib/tmkms"]
-USER tmkms
+
+#USER tmkms
 
 #ENTRYPOINT ["/bin/tmkms"]
 #CMD ["start", "-c", "/etc/tmkms/tmkms.toml"]
