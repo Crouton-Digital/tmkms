@@ -6,7 +6,10 @@ OUTPUT_PATH = "/etc/tmkms/priv_validator_key.json"
 
 client = secretmanager.SecretManagerServiceClient()
 
-secret_name = "projects/508864053449/secrets/tmkms_jackal-testnet_priv_validator_key/versions/latest"
+secret_name = os.getenv("GKE_SECRET_PATH")
+if not secret_name:
+    print("ERROR: Environment variable GKE_SECRET_PATH is not set.")
+    exit(1)
 
 response = client.access_secret_version(request={"name": secret_name})
 secret_data = response.payload.data.decode("utf-8")
