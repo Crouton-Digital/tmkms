@@ -47,6 +47,8 @@ COPY --from=builder /root/.cargo/bin/tmkms /bin/tmkms
 ADD import.py /
 ADD entrypoint.sh /
 
+RUN chmod ug+x /entrypoint.sh
+
 VOLUME ["/etc/tmkms", "/var/lib/tmkms", "/opt/tmkms"]
 
 #USER tmkms
