@@ -44,13 +44,14 @@ RUN mkdir -p /etc/tmkms /var/lib/tmkms /var/log/tmkms \
  && chown -R tmkms:tmkms /etc/tmkms /var/lib/tmkms /var/log/tmkms
 
 COPY --from=builder /root/.cargo/bin/tmkms /bin/tmkms
+ADD import.py /
+ADD entrypoint.sh /
 
-VOLUME ["/etc/tmkms", "/var/lib/tmkms"]
+VOLUME ["/etc/tmkms", "/var/lib/tmkms", "/opt/tmkms"]
 
 #USER tmkms
 
-#ENTRYPOINT ["/bin/tmkms"]
-#CMD ["start", "-c", "/etc/tmkms/tmkms.toml"]
+ENTRYPOINT ["/entrypoint.sh"]
 
 
 
