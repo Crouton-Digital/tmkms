@@ -18,4 +18,5 @@ VALIDATOR_TMKMS_ACTIVE=$(echo "$VALIDATOR_TMKMS_ACTIVE" | xargs)
 : "${VALIDATOR_TMKMS_ACTIVE:=0.0.0.0:1111}"
 envsubst < /opt/tmkms/tmkms.toml.template > /opt/tmkms/tmkms.toml
 
-tmkms start -c /opt/tmkms/tmkms.toml
+/start_tmkms.py
+#tmkms start -c /opt/tmkms/tmkms.toml

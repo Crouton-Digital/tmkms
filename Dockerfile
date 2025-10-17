@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade google-cloud-secret-manager --break-system-packages
-
+RUN pip install --upgrade kubernetes --break-system-packages
 
 RUN useradd --create-home --shell /usr/sbin/nologin --uid 10001 tmkms
 
@@ -46,8 +46,9 @@ RUN mkdir -p /etc/tmkms /var/lib/tmkms /var/log/tmkms \
 COPY --from=builder /root/.cargo/bin/tmkms /bin/tmkms
 ADD import.py /
 ADD entrypoint.sh /
+ADD start_tmkms.py /
 
-RUN chmod ug+x /entrypoint.sh
+RUN chmod ug+x /entrypoint.sh && /start_tmkms.py
 
 VOLUME ["/etc/tmkms", "/var/lib/tmkms", "/opt/tmkms"]
 
