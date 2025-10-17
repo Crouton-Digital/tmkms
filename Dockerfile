@@ -48,7 +48,7 @@ ADD import.py /
 ADD entrypoint.sh /
 ADD start_tmkms.py /
 
-RUN chmod ug+x /entrypoint.sh && /start_tmkms.py
+RUN chmod ug+x /entrypoint.sh && chmod ug+x /start_tmkms.py
 
 VOLUME ["/etc/tmkms", "/var/lib/tmkms", "/opt/tmkms"]
 
