@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG RUST_VERSION=1.90.0
 
 ARG TMKMS_GIT_URL=https://github.com/iqlusioninc/tmkms.git
-ARG TMKMS_GIT_REF=v0.14.0
+ARG TMKMS_GIT_REF=v0.15.0
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git build-essential ufw curl jq snapd \
